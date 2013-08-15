@@ -21,12 +21,20 @@ package jenajsonld;
 import static jenajsonld.JenaJSONLD.JSONLD ;
 import static org.junit.Assert.*;
 
+
+
 import java.io.ByteArrayInputStream ;
 import java.io.ByteArrayOutputStream ;
+import java.io.InputStream;
 
 import org.apache.jena.riot.RDFDataMgr ;
 import org.junit.BeforeClass ;
 import org.junit.Test ;
+
+import com.hp.hpl.jena.rdf.model.Model;
+import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Property;
+import com.hp.hpl.jena.rdf.model.Resource;
 
 import com.hp.hpl.jena.query.Dataset ;
 import com.hp.hpl.jena.query.DatasetFactory ;
@@ -46,6 +54,25 @@ public class TestJJLDReadWrite
     @Test public void read_ds01() { datasetJ2R("graph1.jsonld", "graph1.ttl") ; }
 
     @Test public void read_ds02() { datasetJ2R("dataset1.jsonld", "dataset1.trig") ; }
+
+    @Test
+    public void modelRead() throws Exception {
+        Model model = ModelFactory.createDefaultModel();
+        String jsonld = " { '@id': 'test', \n" +
+            "   'http://example.com/value': 'Test' \n }  ";
+        jsonld = jsonld.replace('\'', '"');
+        InputStream in = new ByteArrayInputStream(jsonld.getBytes("utf8"));
+        
+        String base = "http://example.com/";
+        model.read(in, base, "JSON-LD");
+        model.write(System.out, "TURTLE", "");
+        assertEquals(1, model.size());
+        // Test that relative IRI was absoluted correctly
+        Resource test = model.getResource("http://example.com/test");
+        Property value = model.getProperty("http://example.com/value");
+        assertEquals("Test", model.getProperty(test, value).getString());
+    }
+    
 
     private void graphJ2R(String inFile, String outFile)
     {
