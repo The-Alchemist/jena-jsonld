@@ -19,11 +19,11 @@
 package jenajsonld;
 
 import static jenajsonld.JenaJSONLD.JSONLD ;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream ;
 import java.io.ByteArrayOutputStream ;
 
-import org.apache.jena.atlas.junit.BaseTest ;
 import org.apache.jena.riot.RDFDataMgr ;
 import org.junit.BeforeClass ;
 import org.junit.Test ;
@@ -36,7 +36,7 @@ import com.hp.hpl.jena.sparql.lib.DatasetLib ;
 import com.hp.hpl.jena.sparql.sse.SSE ;
 
 /** tests : JSONLD->RDF ; JSONLD->RDF->JSONLD */
-public class TestJJLDReadWrite extends BaseTest
+public class TestJJLDReadWrite 
 {
     private static String DIR = "testing/RIOT/jsonld/" ; 
     @BeforeClass static public void setupClass() { JenaJSONLD.init(); }  
